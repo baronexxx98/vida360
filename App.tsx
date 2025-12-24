@@ -24,36 +24,20 @@ const App: React.FC = () => {
   });
   const [incidentHistory, setIncidentHistory] = useState<IncidentReport[]>([]);
 
-  // Inicialização do Sistema - Filosofia Vida 360
+  // FASE 0: Inicialização Instantânea (Anti-Freeze)
   useEffect(() => {
-    const iniciarSistema = async () => {
-      console.log("VIDA 360: Iniciando protocolos de segurança...");
-      
-      // Carregamento paralelo não bloqueante
-      const prefetchData = async () => {
-        try {
-          // Tentar obter localização cedo, mas sem esperar
-          if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(() => {}, () => {}, { timeout: 5000 });
-          }
-          
-          // Simular checagem de integridade
-          await new Promise(r => setTimeout(r, 500));
-          setIsSystemReady(true);
-          console.log("VIDA 360: Motor de prontidão ativo.");
-        } catch (e) {
-          console.warn("VIDA 360: Alerta na inicialização periférica.", e);
-          setIsSystemReady(true); // Continua mesmo com erro periférico
-        }
-      };
-
-      prefetchData();
-    };
-
-    iniciarSistema();
+    // Sinalizar prontidão imediatamente para o motor Vida 360
+    setIsSystemReady(true);
+    console.log("VIDA 360: Motor de Estado Ativo. Interface Pronta.");
+    
+    // Tentar aquecer geolocalização em background sem travar nada
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(() => {}, () => {}, { timeout: 10000 });
+    }
   }, []);
 
   const handleStartEmergency = () => {
+    // Mudança de tela prioritária e instantânea
     setIsEmergencyMode(true);
   };
 
@@ -66,41 +50,21 @@ const App: React.FC = () => {
     setUserProfile(newProfile);
   };
 
-  const handleSplashFinish = () => {
-    setAppState('AUTH');
-  };
-
-  const handleLogin = () => {
-    setAppState('ONBOARDING');
-  };
-
+  const handleSplashFinish = () => setAppState('AUTH');
+  const handleLogin = () => setAppState('ONBOARDING');
   const handleOnboardingComplete = (profile: UserProfile) => {
     setUserProfile(profile);
     setAppState('DASHBOARD');
   };
+  const handlePaymentComplete = () => setAppState('DASHBOARD');
 
-  const handlePaymentComplete = () => {
-    setAppState('DASHBOARD');
-  };
-
-  if (appState === 'SPLASH') {
-    return <SplashScreen onFinish={handleSplashFinish} />;
-  }
-
-  if (appState === 'AUTH') {
-    return <AuthScreen onLogin={handleLogin} />;
-  }
-
-  if (appState === 'ONBOARDING') {
-    return <OnboardingProfile onComplete={handleOnboardingComplete} />;
-  }
-
-  if (appState === 'PAYMENT') {
-    return <PaymentScreen onPaymentSuccess={handlePaymentComplete} />;
-  }
+  if (appState === 'SPLASH') return <SplashScreen onFinish={handleSplashFinish} />;
+  if (appState === 'AUTH') return <AuthScreen onLogin={handleLogin} />;
+  if (appState === 'ONBOARDING') return <OnboardingProfile onComplete={handleOnboardingComplete} />;
+  if (appState === 'PAYMENT') return <PaymentScreen onPaymentSuccess={handlePaymentComplete} />;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-gray-50 flex flex-col antialiased">
       <main className="flex-1">
         {isEmergencyMode ? (
           <EmergencyAssistant 
@@ -120,9 +84,9 @@ const App: React.FC = () => {
 
       {!isEmergencyMode && (
          <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 pointer-events-none w-full px-4">
-            <div className="bg-black/90 backdrop-blur-xl px-5 py-2 rounded-full text-white text-[10px] font-black flex items-center justify-center gap-3 border border-white/20 shadow-2xl mx-auto max-w-max uppercase tracking-widest">
-                <span className={`w-2 h-2 rounded-full ${isSystemReady ? 'bg-green-500 animate-pulse' : 'bg-yellow-500'}`}></span>
-                Vida 360 Ativo // Proteção em Tempo Real
+            <div className="bg-black/95 backdrop-blur-xl px-5 py-2 rounded-full text-white text-[10px] font-black flex items-center justify-center gap-3 border border-white/20 shadow-2xl mx-auto max-w-max uppercase tracking-widest">
+                <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                Vida 360 Ativo // Proteção Real
             </div>
          </div>
       )}
