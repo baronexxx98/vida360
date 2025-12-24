@@ -1,0 +1,8 @@
+{
+  "name": "Copy of Copy of VIDA 360 - Resgate Inteligente Nacional",
+  "description": "Um sistema abrangente de emergência médica em tempo real alimentado por IA, fornecendo orientação instantânea nacional, notificações de emergência automáticas e protocolos baseados em evidências.",
+  "requestFramePermissions": [
+    "microphone",
+    "geolocation"
+  ]
+}
