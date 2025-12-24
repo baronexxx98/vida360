@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { CreditCard, CheckCircle2, ShieldCheck, Zap, Copy, QrCode, ArrowRight, Loader2, Landmark } from 'lucide-react';
+import { CreditCard, CheckCircle2, ShieldCheck, Zap, Copy, QrCode, Loader2, Landmark } from 'lucide-react';
 
 interface PaymentScreenProps {
   onPaymentSuccess: () => void;
@@ -20,7 +20,6 @@ const PaymentScreen: React.FC<PaymentScreenProps> = ({ onPaymentSuccess }) => {
   };
 
   const copyPix = () => {
-    // Nova Chave PIX fornecida pelo usuário
     const pixKey = "00020101021126580014br.gov.bcb.pix0136e967d8f5-5dd8-4303-9e10-ebc1082538695204000053039865802BR5922FRANCISCO W S DE JESUS6012SIMOES FILHO62070503***630465EB";
     navigator.clipboard.writeText(pixKey);
     setPixCopied(true);

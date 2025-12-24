@@ -13,6 +13,7 @@ type AppState = 'SPLASH' | 'AUTH' | 'ONBOARDING' | 'PAYMENT' | 'DASHBOARD';
 const App: React.FC = () => {
   const [appState, setAppState] = useState<AppState>('SPLASH');
   const [isEmergencyMode, setIsEmergencyMode] = useState(false);
+  const [isSystemReady, setIsSystemReady] = useState(false);
   const [userProfile, setUserProfile] = useState<UserProfile>({
     name: "",
     age: 0,
@@ -22,6 +23,35 @@ const App: React.FC = () => {
     emergencyContacts: []
   });
   const [incidentHistory, setIncidentHistory] = useState<IncidentReport[]>([]);
+
+  // Inicialização do Sistema - Filosofia Vida 360
+  useEffect(() => {
+    const iniciarSistema = async () => {
+      console.log("VIDA 360: Iniciando protocolos de segurança...");
+      
+      // Carregamento paralelo não bloqueante
+      const prefetchData = async () => {
+        try {
+          // Tentar obter localização cedo, mas sem esperar
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(() => {}, () => {}, { timeout: 5000 });
+          }
+          
+          // Simular checagem de integridade
+          await new Promise(r => setTimeout(r, 500));
+          setIsSystemReady(true);
+          console.log("VIDA 360: Motor de prontidão ativo.");
+        } catch (e) {
+          console.warn("VIDA 360: Alerta na inicialização periférica.", e);
+          setIsSystemReady(true); // Continua mesmo com erro periférico
+        }
+      };
+
+      prefetchData();
+    };
+
+    iniciarSistema();
+  }, []);
 
   const handleStartEmergency = () => {
     setIsEmergencyMode(true);
@@ -46,7 +76,6 @@ const App: React.FC = () => {
 
   const handleOnboardingComplete = (profile: UserProfile) => {
     setUserProfile(profile);
-    // Alterado para pular o pagamento e ir direto para o dashboard (Gratuito no momento)
     setAppState('DASHBOARD');
   };
 
@@ -92,7 +121,7 @@ const App: React.FC = () => {
       {!isEmergencyMode && (
          <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 pointer-events-none w-full px-4">
             <div className="bg-black/90 backdrop-blur-xl px-5 py-2 rounded-full text-white text-[10px] font-black flex items-center justify-center gap-3 border border-white/20 shadow-2xl mx-auto max-w-max uppercase tracking-widest">
-                <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                <span className={`w-2 h-2 rounded-full ${isSystemReady ? 'bg-green-500 animate-pulse' : 'bg-yellow-500'}`}></span>
                 Vida 360 Ativo // Proteção em Tempo Real
             </div>
          </div>
